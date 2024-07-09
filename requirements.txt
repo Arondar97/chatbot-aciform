@@ -12,3 +12,4 @@ InstructorEmbedding
 sentence-transformers
 flask
 langchain_community
+langchain_core
