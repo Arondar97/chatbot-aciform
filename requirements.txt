@@ -11,3 +11,4 @@ huggingface-hub
 InstructorEmbedding
 sentence-transformers
 flask
+langchain_community
