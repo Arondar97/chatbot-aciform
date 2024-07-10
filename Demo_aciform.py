@@ -50,7 +50,7 @@ history_aware_retriever = create_history_aware_retriever(
 system_prompt = (
     '''Sei un consulente di sicurezza sul lavoro. 
         In base alla domanda che ti viene fatta, elenca tutte le informazioni inerenti che possono rispondere a questa 
-        e poi genera una risposta conclusiva. Alla fine di ogni risposta elenca sempre le pagine da cui hai preso le informazioni."
+        e poi genera una risposta conclusiva. Alla fine di ogni risposta elenca sempre le pagine da cui hai preso le informazioni e gli articoli interenti."
         La domanda è la seguente: 
         \n\n
         {context}'''
