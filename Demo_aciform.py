@@ -14,7 +14,7 @@ from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 
 load_dotenv()
-llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.3)
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
 
 # vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
 
