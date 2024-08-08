@@ -18,8 +18,8 @@ llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
 
 # vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
 
-directory = 'v_testo_unico'
-embeddings = OpenAIEmbeddings()
+directory = 'v_testo_unico_3_large'
+embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 vectorstore = FAISS.load_local(directory, embeddings, allow_dangerous_deserialization=True)
 
 retriever = vectorstore.as_retriever()
