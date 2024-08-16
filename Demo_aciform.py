@@ -88,6 +88,22 @@ def chatbot_json():
     data = request.json
     user_question = data.get('question', '')
 
+    session_id = "abc123!"
+
+    # Creare o ottenere la ChatMessageHistory
+    if session_id not in store:
+        store[session_id] = ChatMessageHistory()
+
+    # Estrarre i messaggi dal JSON
+    chat_history = data.get('memory', [])
+    for entry in chat_history:
+        human_message = entry.get('human_message', '')
+        ai_message = entry.get('ai_message', '')
+        if human_message:
+            store[session_id].add_user_message(human_message)
+        if ai_message:
+            store[session_id].add_ai_message(ai_message)
+
 
     conversational_rag_chain = RunnableWithMessageHistory(
         rag_chain,
@@ -100,7 +116,7 @@ def chatbot_json():
     response = conversational_rag_chain.invoke(
                 {"input": user_question},
                 config={
-                "configurable": {"session_id": "1"}
+                "configurable": {"session_id": session_id}
                 },
             )["answer"]
     return {'message': response}
