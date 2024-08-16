@@ -142,6 +142,10 @@ def chatbot_json():
                 "configurable": {"session_id": session_id}
                 },
             )["answer"]
+    
+    # Ripulisco la store
+    store.clear()
+    
     return {'message': response}
 
 
