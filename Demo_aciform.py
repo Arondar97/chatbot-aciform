@@ -83,6 +83,29 @@ app = Flask(__name__)
 def home():
     return "Benvenuto nel tuo Chat_bot personale!"
 
+@app.route('/get_store', methods=['POST'])
+def get_store():
+    # Definisci username e password validi
+    VALID_USERNAME = "chatbot_admin"
+    VALID_PASSWORD = "P@ss4apex_chatbot"
+    
+    # Ottieni i dati JSON dal corpo della richiesta
+    data = request.get_json()
+
+    # Verifica che il JSON contenga username e password
+    if not data or 'username' not in data or 'password' not in data:
+        return {"error": "Missing credentials"}, 400
+
+    username = data['username']
+    password = data['password']
+
+    # Verifica le credenziali
+    if username == VALID_USERNAME and password == VALID_PASSWORD:
+        return {'Store': str(store)}
+    else:
+        return {"error": "Invalid credentials"}, 401
+
+
 @app.route('/demo_chatbot/json', methods=['POST'])
 def chatbot_json():
     data = request.json
