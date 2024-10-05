@@ -1,22 +1,17 @@
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-#from langchain_chroma import Chroma
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
-#from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-#from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from dotenv import load_dotenv
 
 load_dotenv()
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
-
-# vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
 
 directory = 'v_testo_unico_3_large'
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
@@ -54,6 +49,7 @@ system_prompt = (
         \n\n
         {context}'''
 )
+
 qa_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", system_prompt),
@@ -61,6 +57,7 @@ qa_prompt = ChatPromptTemplate.from_messages(
         ("human", "{input}"),
     ]
 )
+
 question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
@@ -83,28 +80,6 @@ app = Flask(__name__)
 def home():
     return "Benvenuto nel tuo Chat_bot personale!"
 
-@app.route('/get_store', methods=['POST'])
-def get_store():
-    # Definisci username e password validi
-    VALID_USERNAME = "chatbot_admin"
-    VALID_PASSWORD = "P@ss4apex_chatbot"
-    
-    # Ottieni i dati JSON dal corpo della richiesta
-    data = request.get_json()
-
-    # Verifica che il JSON contenga username e password
-    if not data or 'username' not in data or 'password' not in data:
-        return {"error": "Missing credentials"}, 400
-
-    username = data['username']
-    password = data['password']
-
-    # Verifica le credenziali
-    if username == VALID_USERNAME and password == VALID_PASSWORD:
-        return {'Store': str(store)}
-    else:
-        return {"error": "Invalid credentials"}, 401
-
 
 @app.route('/demo_chatbot/json', methods=['POST'])
 def chatbot_json():
@@ -121,7 +96,9 @@ def chatbot_json():
     chat_history = data.get('memory', [])
     for entry in chat_history:
         human_message = entry.get('human_message', '')
+        #print(human_message)
         ai_message = entry.get('ai_message', '')
+        #print(ai_message)
         if human_message:
             store[session_id].add_user_message(human_message)
         if ai_message:
@@ -145,7 +122,7 @@ def chatbot_json():
     
     # Ripulisco la store
     store.clear()
-    
+
     return {'message': response}
 
 
